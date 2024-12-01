@@ -1,0 +1,7 @@
+services:
+  discord-bot:
+    build: .
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DEV_GUILD_ID=${DEV_GUILD_ID}
+    restart: unless-stopped
