@@ -1,7 +1,15 @@
 services:
-  discord-bot:
-    build: .
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
       - DEV_GUILD_ID=${DEV_GUILD_ID}
-    restart: unless-stopped
+      - NODE_ENV=development
+    command: npm run dev
+    # restart: unless-stopped

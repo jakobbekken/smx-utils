@@ -1,10 +1,17 @@
-FROM python:3.12-slim
+FROM node:22 AS base
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY package*.json ./
+RUN npm install
+
+
+FROM base AS build
 
 COPY . .
+RUN npm run build
 
-CMD ["python", "main.py"]
+FROM base
+
+COPY --from=build /usr/src/app/dist /usr/src/app/dist
+CMD ["npm", "start"]

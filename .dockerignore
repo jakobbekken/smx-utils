@@ -1,15 +1,13 @@
-__pycache__/
-*.pyc
-*.pyo
-
 .env
 .vscode/
+logs
 *.log
-debug.py
 tests/
 
-Dockerfile
-docker-compose.yaml
+*Dockerfile*
+*docker-compose*
 
 .git/
 .gitignore
+
+node_modules
