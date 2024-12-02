@@ -9,7 +9,24 @@ services:
       - /usr/src/app/node_modules
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - CLIENT_ID=${CLIENT_ID}
       - DEV_GUILD_ID=${DEV_GUILD_ID}
       - NODE_ENV=development
     command: npm run dev
-    # restart: unless-stopped
+    restart: unless-stopped
+
+  deploy-commands:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - CLIENT_ID=${CLIENT_ID}
+      - DEV_GUILD_ID=${DEV_GUILD_ID}
+      - NODE_ENV=development
+    command: npm run deploy-commands
+    restart: no

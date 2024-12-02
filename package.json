@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "deploy-commands": "ts-node src/deploy-commands.ts"
   },
   "dependencies": {
     "discord.js": "^14.16.3",
