@@ -3,6 +3,7 @@ FROM node:22 AS base
 WORKDIR /usr/src/app
 
 COPY package*.json ./
+RUN npm install -g ts-node typescript
 RUN npm install
 
 

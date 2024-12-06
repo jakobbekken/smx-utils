@@ -1,16 +1,16 @@
-import { Client, Collection, CommandInteraction, Events, GatewayIntentBits } from "discord.js";
+import { ChatInputCommandInteraction, Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { Command } from "./interfaces/command";
+import { startScoreUpdater } from "./services/scoreUpdater";
 
 dotenv.config();
 
 const discordToken = process.env.DISCORD_TOKEN;
-const devGuildId = process.env.DEV_GUILD_ID;
 
-if (!discordToken || !devGuildId) {
+if (!discordToken) {
   throw new Error("Missing environment variables")
 }
 
@@ -55,7 +55,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		await command.execute(interaction as CommandInteraction);
+		await command.execute(interaction as ChatInputCommandInteraction);
 	} catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
@@ -67,6 +67,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.once(Events.ClientReady, readyClient => {
+  startScoreUpdater(client, 10000);
   console.log(`Ready! Logged in as ${readyClient.user?.tag}`);
 });
 

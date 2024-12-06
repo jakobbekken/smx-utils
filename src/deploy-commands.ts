@@ -1,16 +1,16 @@
-import { REST, Routes } from "discord.js";
+import { APIApplicationCommand, REST, Routes } from "discord.js";
 import { Command, CommandJSON } from "./interfaces/command";
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 dotenv.config();
 
 const discordToken = process.env.DISCORD_TOKEN;
 const clientId = process.env.CLIENT_ID;
-const devGuildId = process.env.DEV_GUILD_ID;
+const guildId = process.env.GUILD_ID;
 
-if (!discordToken || !clientId || !devGuildId) {
+if (!discordToken || !clientId || !guildId) {
   throw new Error("Missing environment variables")
 }
 
@@ -40,16 +40,38 @@ for (const folder of commandFolders) {
   }
 }
 
+
+const deployGlobalCommands = async (): Promise<APIApplicationCommand[]> => {
+    const data = await rest.put(
+      Routes.applicationCommands(clientId),
+      { body: commands },
+    );
+    return data as APIApplicationCommand[];
+}
+
+const deployGuildCommands = async (): Promise<APIApplicationCommand[]> => {
+    const data = await rest.put(
+      Routes.applicationGuildCommands(clientId, guildId),
+      { body: commands },
+    );
+    return data as APIApplicationCommand[];
+}
+
 const rest = new REST({ version: "10" }).setToken(discordToken);
 
 (async () => {
+  const args = process.argv.slice(2);
   try {
-    console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-    const data = await rest.put(
-      Routes.applicationGuildCommands(clientId, devGuildId),
-      { body: commands },
-    );
+    let data: APIApplicationCommand[];
+    if (args[0] === "global") {
+      console.log(`Started refreshing ${commands.length} application (/) commands globally.`);
+      data = await deployGlobalCommands();
+    } else {
+      console.log(`Started refreshing ${commands.length} application (/) commands on guild.`);
+      data = await deployGuildCommands();
+    }
+
 
     console.log(`Successfully reloaded ${Array.isArray(data) ? data.length : 0} application (/) commands.`);
   } catch (error) {
