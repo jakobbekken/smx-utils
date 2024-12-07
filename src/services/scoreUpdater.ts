@@ -91,9 +91,13 @@ export const startScoreUpdater = async (client: Client, interval: number) => {
                 const smxPicture = `https://data.stepmaniax.com/${score.gamer.picture_path}`;
                 const smxColor = score.gamer.hex_color;
 
+                if (channel.country !== smxCountry && channel.country !== "") {
+                  continue;
+                }
+
                 const scoreEmbed = new EmbedBuilder()
                   .setTitle(`${smxUsername} :flag_${smxCountry.toLowerCase()}:`)
-                  .setDescription(smxDescription)
+                  .setDescription(smxDescription || "No description :(")
                   .setColor(`#${smxColor}`)
                   .setURL(`https://smx.573.no/graph?scores=${scoreId}`)
                   .setAuthor({ name: `${title} - ${artist}`, iconURL: cover })
