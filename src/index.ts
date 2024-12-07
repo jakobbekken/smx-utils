@@ -19,7 +19,11 @@ class MyClient extends Client {
   commands: Collection<string, Command>;
   constructor() {
     super({
-      intents: [GatewayIntentBits.Guilds],
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages
+      ],
     });
     this.commands = new Collection();
   }
