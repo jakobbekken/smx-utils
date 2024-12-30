@@ -1,0 +1,42 @@
+Table matches {
+  id integer [pk]
+  p1_id varchar
+  p2_id varchar
+  format integer
+  accepted boolean
+  winner_id varchar
+  created_at timestamp 
+}
+
+Table match_chart {
+  id integer [pk]
+  match_id integer
+  chart_id integer
+  p1_score_id integer
+  p2_score_id integer
+  winner_id varchar
+}
+
+Table formats {
+  id integer [pk]
+  name varchar
+  number integer
+}
+
+
+Table users {
+  discord_id varchar [pk]
+  smx_id integer
+  smx_username varchar
+  exp integer
+}
+
+Table score_channels {
+  channel_id varchar [pk]
+  country varchar
+  only_highscores boolean
+}
+
+Ref: "matches"."id" < "match_chart"."match_id"
+
+Ref: "matches"."format" < "formats"."id"
